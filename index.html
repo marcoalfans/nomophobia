@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nomophobia Questionnaire (NMP-Q)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Halaman Input Nama -->
+      <div id="namePage">
+        <h2>Insert your name</h2>
+        <input type="text" id="userName" placeholder="Nama Anda" required />
+        <button id="submitName">Continue</button>
+      </div>
+
+      <!-- Halaman Pilih Bahasa -->
+      <div id="languagePage" style="display: none">
+        <h2>Choose your preferred language</h2>
+        <div class="language-options">
+          <div class="language-option" id="indonesia">
+            <img src="indonesia-flag.png" alt="Bahasa Indonesia" class="flag" />
+            <p>Bahasa Indonesia</p>
+          </div>
+          <div class="language-option" id="english">
+            <img src="english-flag.png" alt="English" class="flag" />
+            <p>English</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Halaman Kuesioner -->
+      <div id="questionnairePage" style="display: none">
+        <h1 id="questionnaireTitle"></h1>
+        <div class="callout">
+          <p id="instructionText"></p>
+          <ul id="scaleText"></ul>
+          <p class="be-honest">Be honest!</p>
+        </div>
+        <form id="nmpqForm">
+          <div id="questions"></div>
+          <button type="submit">Periksa</button>
+        </form>
+        <div id="result"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
