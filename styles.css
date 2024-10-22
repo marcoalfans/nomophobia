@@ -187,3 +187,18 @@ input[type="radio"] {
   font-size: 1.1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+#resultPage {
+  text-align: center;
+  margin-top: 50px;
+}
+
+#resultPage h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+#resultPage p {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}

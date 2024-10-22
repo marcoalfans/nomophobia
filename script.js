@@ -48,16 +48,40 @@ const questionContainer = document.getElementById("questions");
 const namePage = document.getElementById("namePage");
 const languagePage = document.getElementById("languagePage");
 const questionnairePage = document.getElementById("questionnairePage");
+const resultPage = document.getElementById("resultPage");
 
 const userNameInput = document.getElementById("userName");
 const submitNameBtn = document.getElementById("submitName");
 
 let questions = [];
-let language = "id"; // Default to Indonesian
+let language = "en"; // Default to English
+let userName = "";
 
 // Langkah 1: Masukkan Nama
 submitNameBtn.addEventListener("click", () => {
   const userName = userNameInput.value.trim();
+  if (userName) {
+    namePage.style.display = "none";
+    languagePage.style.display = "block";
+  } else {
+    alert("Silahkan masukkan nama Anda.");
+  }
+});
+
+// Langkah 2: Pilih Bahasa
+document.getElementById("indonesia").addEventListener("click", () => {
+  language = "id";
+  displayQuestionnaire();
+});
+
+document.getElementById("english").addEventListener("click", () => {
+  language = "en";
+  displayQuestionnaire();
+});
+
+// Langkah 1: Masukkan Nama
+submitNameBtn.addEventListener("click", () => {
+  userName = userNameInput.value.trim();
   if (userName) {
     namePage.style.display = "none";
     languagePage.style.display = "block";
@@ -193,54 +217,65 @@ document.getElementById("nmpqForm").addEventListener("submit", function (e) {
     return;
   }
 
-  // Calculate total score
-  const totalScore = questions.reduce((sum, _, index) => {
-    const selectedValue = parseInt(
-      document.querySelector(`input[name="q${index}"]:checked`).value
-    );
-    return sum + selectedValue;
-  }, 0);
-
-  // Get interpretation based on score
-  const interpretation = getInterpretation(totalScore);
-
-  // Display result
-  const resultDiv = document.getElementById("result");
-  resultDiv.style.display = "block";
-  resultDiv.innerHTML = `
-                <h2 class="result-heading">Hasil Penilaian</h2>
-                <div class="result-score">Skor Total: ${totalScore}</div>
-                <div class="result-interpretation">
-                    <strong>${interpretation.title}</strong>
-                    <p>${interpretation.description}</p>
-                </div>
-            `;
+  //   // Calculate total score
+  //   const totalScore = questions.reduce((sum, _, index) => {
+  //     const selectedValue = parseInt(
+  //       document.querySelector(`input[name="q${index}"]:checked`).value
+  //     );
+  //     return sum + selectedValue;
+  //   }, 0);
 });
 
-function getInterpretation(score) {
-  if (score <= 20) {
-    return {
-      title: "Tidak ada nomophobia",
-      description:
-        "Anda memiliki hubungan yang sehat dengan ponsel Anda dan tidak ada masalah ketika terpisah darinya.",
-    };
-  } else if (score <= 60) {
-    return {
-      title: "Nomophobia ringan",
-      description:
-        "Anda sedikit gelisah ketika Anda lupa telepon di rumah selama sehari atau terjebak di suatu tempat yang tidak ada WiFinya, tetapi kecemasannya tidak terlalu berlebihan.",
-    };
-  } else if (score <= 100) {
-    return {
-      title: "Nomophobia sedang",
-      description:
-        "Anda cukup melekat pada ponsel Anda. Anda sering memeriksa update ponsel Anda, saat berjalan di jalan atau berbicara dengan teman, dan Anda sering merasa khawatir ketika ponsel Anda tidak terhubung.",
-    };
-  } else {
-    return {
-      title: "Nomophobia berat",
-      description:
-        "Mata dan pikiran Anda hampir tidak bisa jauh lebih dari 60 detik tanpa memeriksa ponsel Anda. Memeriksa ponsel menjadi kegiatan awal pada pagi hari dan yang terakhir di malam hari, dan mendominasi aktivitas Anda sepanjang hari.",
-    };
+// Langkah 4: Hitung Skor dan Tampilkan Hasil
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  let totalScore = 0;
+  const totalQuestions = questions.length;
+
+  for (let i = 0; i < totalQuestions; i++) {
+    const answer = document.querySelector(`input[name="q${i}"]:checked`);
+    if (answer) {
+      totalScore += parseInt(answer.value);
+    } else {
+      alert("Silakan isi semua pertanyaan.");
+      return;
+    }
   }
+
+  displayResult(totalScore);
+});
+
+// Langkah 5: Tampilkan Hasil di Halaman Baru
+function displayResult(totalScore) {
+  questionnairePage.style.display = "none";
+  resultPage.style.display = "block";
+
+  document.getElementById("greetingText").innerText = `Halo ${userName}!`;
+  document.getElementById(
+    "scoreText"
+  ).innerText = `Skor NMPQ Anda adalah: ${totalScore}`;
+
+  let description, advice;
+
+  if (totalScore <= 20) {
+    description = "Tidak ada nomophobia";
+    advice =
+      "Anda memiliki hubungan yang sehat dengan ponsel Anda dan tidak ada masalah ketika terpisah darinya.";
+  } else if (totalScore <= 60) {
+    description = "Nomophobia ringan";
+    advice =
+      "Anda sedikit gelisah ketika Anda lupa telepon di rumah selama sehari atau terjebak di suatu tempat yang tidak ada WiFinya, tetapi kecemasannya tidak terlalu berlebihan. \n Perhatikan penggunaan smartphone Anda dan coba untuk menguranginya jika perlu.";
+  } else if (totalScore <= 100) {
+    description = "Nomophobia sedang";
+    advice =
+      "Anda mungkin bergantung cukup banyak pada smartphone Anda. Anda sering memeriksa update ponsel Anda, saat berjalan di jalan atau berbicara dengan teman, dan Anda sering merasa khawatir ketika ponsel Anda tidak terhubung. \n Cobalah sesekali melepaskan diri.";
+  } else {
+    description = "Anda memiliki tingkat Nomophobia yang sangat tinggi.";
+    advice =
+      "Mata dan pikiran Anda hampir tidak bisa jauh lebih dari 60 detik tanpa memeriksa ponsel Anda. Memeriksa ponsel menjadi kegiatan awal pada pagi hari dan yang terakhir di malam hari, dan mendominasi aktivitas Anda sepanjang hari. \n Anda mungkin perlu mengevaluasi bagaimana smartphone memengaruhi hidup Anda.";
+  }
+
+  document.getElementById("descriptionText").innerText = description;
+  document.getElementById("adviceText").innerText = advice;
 }
